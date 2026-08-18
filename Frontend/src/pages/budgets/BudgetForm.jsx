@@ -90,15 +90,15 @@ export default function BudgetForm({ budget, categories: categoriesProp, onSave,
   const handleCancel = () => (onCancel ? onCancel() : navigate('/budgets'));
 
   if (!ready) {
-    return <p className="p-4 text-sm text-text-muted">Loading…</p>;
+    return <p className="p-4 text-sm text-muted">Loading…</p>;
   }
 
   const fieldClass =
-    'w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30';
+    'w-full rounded-control border border-border bg-card/80 dark:bg-card/60 px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30';
   const labelClass = 'mb-1 block text-xs font-medium text-text-secondary';
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 rounded-control border border-border bg-surface p-4">
+    <form onSubmit={handleSubmit} className="space-y-3 rounded-control border border-border bg-surface/80 dark:bg-surface/60 p-4">
       {error && <p className="text-sm text-danger-600">{error}</p>}
 
       <div>
@@ -176,14 +176,14 @@ export default function BudgetForm({ budget, categories: categoriesProp, onSave,
         <button
           type="submit"
           disabled={saving}
-          className="rounded-control bg-primary-600 px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
+          className="rounded-control bg-primary-600 text-white px-3.5 py-1.5 text-sm font-semibold hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400 disabled:opacity-60"
         >
           {saving ? 'Saving…' : 'Save'}
         </button>
         <button
           type="button"
           onClick={handleCancel}
-          className="rounded-control border border-border px-3.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-card"
+          className="rounded-control border border-border px-3.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-card/80 dark:hover:bg-card/60"
         >
           Cancel
         </button>

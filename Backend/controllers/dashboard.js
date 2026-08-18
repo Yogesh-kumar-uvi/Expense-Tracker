@@ -72,11 +72,26 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
     progressPercent: g.targetAmount ? ((g.currentAmount / g.targetAmount) * 100).toFixed(2) : 0,
   }));
 
-  // Upcoming bills (due in the next 7 days)
-  const sevenDaysLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  // Upcoming bills (due in the next 7 days, including today) - using UTC for consistent date comparison
+  const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const endOfSevenDaysLater = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 7, 23, 59, 59, 999));
   const upcomingBills = await Bill.find({
     userId,
-    dueDate: { $gte: now, $lte: sevenDaysLater },
+    dueDate: { $gte: startOfToday, $lte: endOfSevenDaysLater },
+    paid: false,
+  }).sort({ dueDate: 1 });
+
+  // Pending bills (due after the next 7 days)
+  const pendingBills = await Bill.find({
+    userId,
+    dueDate: { $gt: endOfSevenDaysLater },
+    paid: false,
+  }).sort({ dueDate: 1 });
+
+  // Overdue bills (due before today)
+  const overdueBills = await Bill.find({
+    userId,
+    dueDate: { $lt: startOfToday },
     paid: false,
   }).sort({ dueDate: 1 });
 
@@ -89,6 +104,8 @@ exports.getDashboard = asyncHandler(async (req, res, next) => {
       budgets: budgetsWithStats,
       goals: goalsWithProgress,
       upcomingBills,
+      pendingBills,
+      overdueBills,
     },
   });
 });

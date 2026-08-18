@@ -73,7 +73,7 @@ export default function ProfilePage() {
                             <Camera size={15} />
                             {user?.avatarUrl ? 'Change photo' : 'Upload photo'}
                         </button>
-                        <p className="mt-2 text-xs text-text-muted">JPEG, PNG, WEBP, or GIF. Max 5MB.</p>
+                        <p className="mt-2 text-xs text-muted">JPEG, PNG, WEBP, or GIF. Max 5MB.</p>
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -88,7 +88,7 @@ export default function ProfilePage() {
                     <p className="text-sm text-text-primary">
                         {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-xs text-text-muted">{user?.email}</p>
+                    <p className="text-xs text-muted">{user?.email}</p>
                 </div>
             </div>
         </div>

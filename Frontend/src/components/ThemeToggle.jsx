@@ -31,7 +31,7 @@ export default function ThemeToggle() {
               'flex h-7 w-7 items-center justify-center rounded-[8px] transition-colors',
               active
                 ? 'bg-primary-600 text-white'
-                : 'text-text-muted hover:text-text-primary',
+                : 'text-muted hover:text-text-primary',
             ].join(' ')}
           >
             <Icon size={14} strokeWidth={2.25} />

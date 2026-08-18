@@ -74,7 +74,7 @@ export default function CategoryList() {
       ) : error ? (
         <p className="text-center text-red-500 py-8">{error}</p>
       ) : categories.length === 0 ? (
-        <p className="text-center text-text-muted py-8">
+        <p className="text-center text-muted py-8">
           No categories yet. Click “+ Add New Category” to get started.
         </p>
       ) : (
@@ -102,13 +102,13 @@ export default function CategoryList() {
                       <>
                         <button
                           onClick={() => handleEdit(cat)}
-                          className="text-indigo-600 hover:underline"
+                          className="text-indigo-500 hover:text-indigo-300 dark:text-indigo-300"
                         >
                           Edit
                         </button>{' '}
                         <button
                           onClick={() => handleDelete(cat._id)}
-                          className="text-red-600 hover:underline"
+                          className="text-red-500 hover:text-red-300 dark:text-red-300"
                         >
                           Delete
                         </button>

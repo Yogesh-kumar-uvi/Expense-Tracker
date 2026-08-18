@@ -120,7 +120,7 @@ export default function TransactionForm({ transaction, categories: categoriesPro
   };
 
   if (!ready) {
-    return <p className="p-4 text-sm text-text-muted">Loading…</p>;
+    return <p className="p-4 text-sm text-muted">Loading…</p>;
   }
 
   const fieldClass =
@@ -214,7 +214,7 @@ export default function TransactionForm({ transaction, categories: categoriesPro
             )}
           </>
         ) : (
-          <p className="text-xs text-text-muted">Save the transaction first, then you can attach a receipt.</p>
+          <p className="text-xs text-muted">Save the transaction first, then you can attach a receipt.</p>
         )}
       </div>
 

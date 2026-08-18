@@ -106,14 +106,14 @@ export default function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCl
                 <p className="truncate text-sm font-medium text-text-primary">
                   {user ? `${user.firstName} ${user.lastName}` : 'Loading…'}
                 </p>
-                <p className="truncate text-xs text-text-muted">{user?.email}</p>
+                <p className="truncate text-xs text-muted">{user?.email}</p>
               </div>
             )}
           </NavLink>
           <button
             onClick={logout}
             aria-label="Log out"
-            className="shrink-0 rounded-control p-2 text-text-muted transition-colors hover:bg-danger-50 hover:text-danger-600 dark:hover:bg-danger-500/10"
+            className="shrink-0 rounded-control p-2 text-muted transition-colors hover:bg-danger-50 hover:text-danger-600 dark:hover:bg-danger-500/10"
           >
             <LogOut size={17} />
           </button>

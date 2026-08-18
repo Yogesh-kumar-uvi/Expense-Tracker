@@ -57,7 +57,7 @@ export default function BillList() {
         <h2 className="text-xl font-semibold">Bills</h2>
         <button
           onClick={() => navigate('/bills/new')}
-          className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+          className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
         >
           + New Bill
         </button>
@@ -94,13 +94,13 @@ export default function BillList() {
                       <>
                         <button
                           onClick={() => handleEdit(bill)}
-                          className="text-indigo-600 hover:underline"
+                          className="text-indigo-500 hover:text-indigo-300 dark:text-indigo-300"
                         >
                           Edit
                         </button>{' '}
                         <button
                           onClick={() => handleDelete(bill._id)}
-                          className="text-red-600 hover:underline"
+                          className="text-red-500 hover:text-red-300 dark:text-red-300"
                         >
                           Delete
                         </button>

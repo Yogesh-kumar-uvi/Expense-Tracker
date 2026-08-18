@@ -32,9 +32,9 @@ const startServer = async () => {
     app.use(mongoSanitize());
 
     // Set security headers
-    app.use(helmet());
-
-    // Prevent XSS attacks
+    app.use(helmet());  
+      
+    // Prevent XSS attacks   
     app.use(xss());
 
     // Enable CORS — must run before the rate limiter so that even a
@@ -45,13 +45,14 @@ const startServer = async () => {
       origin: process.env.CLIENT_URL || 'http://localhost:5173',
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      // allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
     };
-    app.use(cors(corsOptions));
+    app.use(cors(corsOptions));   
 
     // Rate limiting — skip OPTIONS entirely (the browser's automatic CORS
     // preflight request shouldn't count against the limit), and use a
     // higher ceiling since a single page load can fire several API calls.
+    
     const limiter = rateLimit({
       windowMs: 10 * 60 * 1000, // 10 mins
       max: 1000,

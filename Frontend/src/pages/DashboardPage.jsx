@@ -30,7 +30,7 @@ function KpiCard({ label, amount, icon: Icon, tone }) {
 }
 
 function EmptyRow({ children }) {
-  return <p className="py-6 text-center text-sm text-text-muted">{children}</p>;
+  return <p className="py-6 text-center text-sm text-muted">{children}</p>;
 }
 
 function SkeletonCard() {
@@ -194,7 +194,7 @@ export default function DashboardPage() {
               <li key={bill._id} className="flex items-center justify-between py-3 text-sm">
                 <span className="font-medium text-text-primary">{bill.name}</span>
                 <span className="flex items-center gap-4">
-                  <span className="text-text-muted">
+                  <span className="text-muted">
                     Due {new Date(bill.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                   </span>
                   <span className="font-numeric font-semibold text-text-primary">{currency(bill.amount)}</span>

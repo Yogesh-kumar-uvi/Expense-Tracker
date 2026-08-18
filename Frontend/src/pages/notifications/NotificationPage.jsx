@@ -61,13 +61,13 @@ export default function NotificationPage() {
         </div>
 
         {loading ? (
-          <p className="p-8 text-center text-sm text-text-muted">Loading…</p>
+          <p className="p-8 text-center text-sm text-muted">Loading…</p>
         ) : error ? (
           <p className="p-8 text-center text-sm text-danger-600">{error}</p>
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center gap-2 p-10 text-center">
-            <Bell size={22} className="text-text-muted" />
-            <p className="text-sm text-text-muted">You're all caught up — no notifications.</p>
+            <Bell size={22} className="text-muted" />
+            <p className="text-sm text-muted">You're all caught up — no notifications.</p>
           </div>
         ) : (
           <ul className="divide-y divide-border">
@@ -82,7 +82,7 @@ export default function NotificationPage() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-text-primary">{n.title}</p>
                   <p className="mt-0.5 text-sm text-text-secondary">{n.message}</p>
-                  <p className="mt-1 text-xs text-text-muted">
+                  <p className="mt-1 text-xs text-muted">
                     {new Date(n.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -92,7 +92,7 @@ export default function NotificationPage() {
                       onClick={() => handleMarkRead(n._id)}
                       aria-label="Mark as read"
                       title="Mark as read"
-                      className="rounded-control p-1.5 text-text-muted hover:bg-surface hover:text-success-600"
+                      className="rounded-control p-1.5 text-muted hover:bg-surface hover:text-success-600"
                     >
                       <Check size={15} />
                     </button>
@@ -101,7 +101,7 @@ export default function NotificationPage() {
                     onClick={() => handleDelete(n._id)}
                     aria-label="Delete notification"
                     title="Delete"
-                    className="rounded-control p-1.5 text-text-muted hover:bg-surface hover:text-danger-600"
+                    className="rounded-control p-1.5 text-muted hover:bg-surface hover:text-danger-600"
                   >
                     <Trash2 size={15} />
                   </button>

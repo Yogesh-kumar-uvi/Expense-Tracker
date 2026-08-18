@@ -77,7 +77,7 @@ export default function TransactionList() {
       ) : error ? (
         <p className="text-center text-red-500 py-8">{error}</p>
       ) : transactions.length === 0 ? (
-        <p className="text-center text-text-muted py-8">
+        <p className="text-center text-muted py-8">
           No transactions yet. Click "+ Add New Transaction" to get started.
         </p>
       ) : (

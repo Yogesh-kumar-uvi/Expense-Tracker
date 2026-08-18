@@ -22,36 +22,36 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
+      <h2 className="text-2xl font-bold mb-4 text-primary">Login</h2>
       {error && <p className="text-red-500 mt-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Email:</label>
+          <label className="block text-sm font-medium mb-1 text-secondary">Email:</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 border border-border rounded-md bg-card/80 dark:bg-card/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-primary"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Password:</label>
+          <label className="block text-sm font-medium mb-1 text-secondary">Password:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 border border-border rounded-md bg-card/80 dark:bg-card/60 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-primary"
           />
         </div>
-        <button type="submit" className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button type="submit" className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           Log in
         </button>
       </form>
       <p className="mt-4 text-center">
         Don't have an account?{' '}
-        <a href="/register" className="text-indigo-600 hover:underline">Register here</a>
+        <a href="/register" className="text-indigo-500 hover:text-indigo-300 dark:text-indigo-300">Register here</a>
       </p>
     </div>
   );

@@ -84,11 +84,20 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
   const handleCancel = () => (onCancel ? onCancel() : navigate('/goals'));
 
   if (!ready) {
-    return <p className="p-4 text-sm text-text-muted">Loading…</p>;
+    return <p className="p-4 text-sm text-muted">Loading…</p>;
   }
 
+  const inputClass =
+    'w-full rounded-control border border-border bg-card/80 dark:bg-card/60 px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30';
+  const selectClass =
+    'w-full rounded-control border border-border bg-card/80 dark:bg-card/60 px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30';
+  const buttonCancelClass =
+    'rounded-control border border-border px-3.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-card/80 dark:hover:bg-card/60';
+  const buttonSubmitClass =
+    'rounded-control bg-primary-600 text-white px-3.5 py-1.5 text-sm font-semibold hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400 disabled:opacity-60';
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 rounded-control border border-border bg-surface p-4">
+    <form onSubmit={handleSubmit} className="space-y-3 rounded-control border border-border bg-surface/80 dark:bg-surface/60 p-4">
       {error && <p className="text-sm text-danger-600">{error}</p>}
       <div>
         <label className="mb-1 block text-xs font-medium text-text-secondary">Name</label>
@@ -97,7 +106,7 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
           value={form.name}
           onChange={handleChange}
           required
-          className="w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+          className={inputClass}
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -111,7 +120,7 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
             value={form.targetAmount}
             onChange={handleChange}
             required
-            className="w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+            className={inputClass}
           />
         </div>
         <div>
@@ -123,7 +132,7 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
             min="0"
             value={form.currentAmount}
             onChange={handleChange}
-            className="w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+            className={inputClass}
           />
         </div>
       </div>
@@ -134,7 +143,7 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
           type="date"
           value={form.deadline}
           onChange={handleChange}
-          className="w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+          className={inputClass}
         />
       </div>
       {categories.length > 0 && (
@@ -144,7 +153,7 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
             name="categoryId"
             value={form.categoryId}
             onChange={handleChange}
-            className="w-full rounded-control border border-border bg-card px-3 py-2 text-sm text-text-primary focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+            className={selectClass}
           >
             <option value="">-- None --</option>
             {categories.map((c) => (
@@ -157,14 +166,14 @@ export default function GoalForm({ goal, categories: categoriesProp, onSave, onC
         <button
           type="submit"
           disabled={loading}
-          className="rounded-control bg-primary-600 px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
+          className={buttonSubmitClass}
         >
           {loading ? 'Saving…' : 'Save'}
         </button>
         <button
           type="button"
           onClick={handleCancel}
-          className="rounded-control border border-border px-3.5 py-1.5 text-sm font-medium text-text-secondary hover:bg-card"
+          className={buttonCancelClass}
         >
           Cancel
         </button>

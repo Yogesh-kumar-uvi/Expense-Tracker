@@ -77,7 +77,7 @@ export default function GoalList() {
       ) : error ? (
         <p className="text-center text-red-500 py-8">{error}</p>
       ) : goals.length === 0 ? (
-        <p className="text-center text-text-muted py-8">
+        <p className="text-center text-muted py-8">
           No goals yet. Click "+ Add New Goal" to get started.
         </p>
       ) : (

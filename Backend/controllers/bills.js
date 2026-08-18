@@ -10,10 +10,33 @@ exports.getBills = asyncHandler(async (req, res, next) => {
   const bills = await Bill.find({ userId: req.user.id })
     .populate('categoryId', 'name type icon color')
     .sort({ dueDate: 1 });
+
+  // Add status to each bill: overdue, upcoming, pending
+  const now = new Date();
+  const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const endOfSevenDaysLater = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 7, 23, 59, 59, 999));
+
+  const billsWithStatus = bills.map(bill => {
+    const billObj = bill.toObject();
+    if (billObj.paid) {
+      billObj.status = 'paid';
+    } else {
+      const dueDate = new Date(billObj.dueDate);
+      if (dueDate < startOfToday) {
+        billObj.status = 'overdue';
+      } else if (dueDate <= endOfSevenDaysLater) {
+        billObj.status = 'upcoming';
+      } else {
+        billObj.status = 'pending';
+      }
+    }
+    return billObj;
+  });
+
   res.status(200).json({
     success: true,
-    count: bills.length,
-    data: bills,
+    count: billsWithStatus.length,
+    data: billsWithStatus,
   });
 });
 

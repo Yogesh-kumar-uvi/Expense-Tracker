@@ -21,10 +21,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10">
+    <div className="max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-2xl mx-auto mt-10 p-4">
       <h2 className="text-2xl font-bold mb-4 text-primary">Login</h2>
       {error && <p className="text-red-500 mt-2">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium mb-1 text-secondary">Email:</label>
           <input
@@ -49,6 +49,9 @@ export default function LoginPage() {
           Log in
         </button>
       </form>
+      <p className="mt-3 text-center">
+        <a href="/forgotpassword" className="text-sm text-indigo-600 hover:underline">Forgot password?</a>
+      </p>
       <p className="mt-4 text-center">
         Don't have an account?{' '}
         <a href="/register" className="text-indigo-500 hover:text-indigo-300 dark:text-indigo-300">Register here</a>

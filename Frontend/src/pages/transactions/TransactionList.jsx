@@ -10,6 +10,8 @@ export default function TransactionList() {
   const [error, setError] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +19,9 @@ export default function TransactionList() {
       try {
         setLoading(true);
         setError(null);
-        const { data: transData } = await api.get('/transactions');
+        const { data: transData } = await api.get('/transactions', { params: { page, limit: 50 } });
         setTransactions(transData.data);
+        setPages(transData.pages || 1);
         const { data: catData } = await api.get('/categories');
         setCategories(catData.data);
       } catch (e) {
@@ -29,7 +32,7 @@ export default function TransactionList() {
       }
     };
     fetchData();
-  }, []);
+  }, [page]);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this transaction?')) return;
@@ -50,8 +53,9 @@ export default function TransactionList() {
     try {
       await api.put(`/transactions/${editingId}`, updatedTransaction);
       setEditingId(null);
-      const { data } = await api.get('/transactions');
+      const { data } = await api.get('/transactions', { params: { page, limit: 50 } });
       setTransactions(data.data);
+      setPages(data.pages || 1);
     } catch (e) {
       console.error(e);
       setError('Failed to save transaction');
@@ -77,7 +81,7 @@ export default function TransactionList() {
       ) : error ? (
         <p className="text-center text-red-500 py-8">{error}</p>
       ) : transactions.length === 0 ? (
-        <p className="text-center text-muted py-8">
+        <p className="text-center text-text-muted py-8">
           No transactions yet. Click "+ Add New Transaction" to get started.
         </p>
       ) : (
@@ -135,6 +139,26 @@ export default function TransactionList() {
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && pages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            onClick={() => setPage(p => Math.max(p - 1, 1))}
+            disabled={page <= 1}
+            className="px-3 py-1 rounded border border-gray-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+          >
+            Prev
+          </button>
+          <span className="text-sm text-text-muted">Page {page} of {pages}</span>
+          <button
+            onClick={() => setPage(p => Math.min(p + 1, pages))}
+            disabled={page >= pages}
+            className="px-3 py-1 rounded border border-gray-300 text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

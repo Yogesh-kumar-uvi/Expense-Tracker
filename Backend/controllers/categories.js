@@ -65,7 +65,9 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
   if (category.userId.toString() !== req.user.id) {
     return next(new ErrorResponse(`Not authorized to update this category`, 401));
   }
-
+  // Never let the update payload change ownership of the resource, even
+  // for the owner's own request — userId is set once at creation only.
+  delete req.body.userId;
   category = await Category.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true

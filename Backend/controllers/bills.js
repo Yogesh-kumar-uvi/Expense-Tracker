@@ -67,6 +67,10 @@ exports.createBill = asyncHandler(async (req, res, next) => {
     if (!cat) return next(new ErrorResponse('Category not found', 404));
     if (cat.userId.toString() !== req.user.id)
       return next(new ErrorResponse('Not authorized to use this category', 401));
+
+  // Never let the update payload change ownership of the resource, even
+  // for the owner's own request — userId is set once at creation only.
+  delete req.body.userId;
   }
 
   const bill = await Bill.create(req.body);

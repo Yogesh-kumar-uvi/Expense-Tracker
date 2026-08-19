@@ -70,6 +70,10 @@ exports.updateGoal = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse('Not authorized to use this category', 401));
   }
 
+    // Never let the update payload change ownership of the resource, even
+  // for the owner's own request — userId is set once at creation only.
+  delete req.body.userId;
+
   goal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,

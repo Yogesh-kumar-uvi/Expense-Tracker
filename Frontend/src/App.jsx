@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -27,6 +29,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+          <Route path="/resetpassword/:resettoken" element={<ResetPasswordPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 

@@ -1,5 +1,5 @@
 const asyncHandler = require('../middleware/asyncHandler');
-const Transaction = require('../models/Transaction');
+const Transaction = require('../models/Transaction');   
 const Category = require('../models/Category');
 const ErrorResponse = require('../utils/errorResponse');
 const uploadToCloudinary = require('../utils/uploadToCloudinary');
@@ -7,19 +7,32 @@ const uploadToCloudinary = require('../utils/uploadToCloudinary');
 // @desc    Get all transactions for the logged in user
 // @route   GET /api/v1/transactions
 // @access  Private
+
 exports.getTransactions = asyncHandler(async (req, res, next) => {
-  // We can add query parameters for filtering later (e.g., by type, date range, category)
-  // For now, we just get all transactions for the user, sorted by date descending
-  const transactions = await Transaction.find({ userId: req.user.id })
-    .populate({
-      path: 'categoryId',
-      select: 'name type icon color' // Only get the fields we need from the category
-    })
-    .sort({ date: -1 });
+  // Pagination — defaults keep behavior close to before (most users won't
+  // notice anything changed) but caps the response so it stays fast as data grows.
+  const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 200);
+  const skip = (page - 1) * limit;
+
+  const [transactions, total] = await Promise.all([
+    Transaction.find({ userId: req.user.id })
+      .populate({
+        path: 'categoryId',
+        select: 'name type icon color' // Only get the fields we need from the category
+      })
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit),
+    Transaction.countDocuments({ userId: req.user.id })
+  ]);
 
   res.status(200).json({
     success: true,
     count: transactions.length,
+    total,
+    page,
+    pages: Math.ceil(total / limit) || 1,
     data: transactions
   });
 });
@@ -80,9 +93,7 @@ exports.createTransaction = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Update transaction
-// @route   PUT /api/v1/transactions/:id
-// @access  Private
+
 exports.updateTransaction = asyncHandler(async (req, res, next) => {
   let transaction = await Transaction.findById(req.params.id);
 
@@ -111,6 +122,10 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
     }
   }
 
+    // Never let the update payload change ownership of the resource, even
+  // for the owner's own request — userId is set once at creation only.
+  delete req.body.userId;
+  
   transaction = await Transaction.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -125,9 +140,7 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Delete transaction
-// @route   DELETE /api/v1/transactions/:id
-// @access  Private
+
 exports.deleteTransaction = asyncHandler(async (req, res, next) => {
   const transaction = await Transaction.findById(req.params.id);
 

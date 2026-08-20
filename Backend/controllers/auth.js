@@ -295,11 +295,29 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   });
 });
 
+const logout = asyncHandler(async (req, res, next) => {
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
+  };
+
+  res.clearCookie('accessToken', cookieOptions);
+  res.clearCookie('refreshToken', cookieOptions);
+
+  res.status(200).json({
+    success: true,
+    data: {}
+  });
+});
+
 module.exports = {
   register,
   login,
   getMe,
   forgotPassword,
   resetPassword,
-  updateAvatar
+  updateAvatar,
+  logout
 };

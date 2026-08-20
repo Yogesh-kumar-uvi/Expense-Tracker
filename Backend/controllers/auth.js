@@ -54,7 +54,18 @@ const register = asyncHandler(async (req, res, next) => {
     console.error('Welcome email failed:', emailError);
   }
 
-  sendTokenResponse(user, 201, res);
+  setAccessTokenCookie(user, res);
+  setRefreshTokenCookie(user, res);
+  res.status(201).json({
+    success: true,
+    data: {
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role
+    }
+  });
 });
 
 // @desc    Login user
@@ -82,7 +93,18 @@ const login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
 
-  sendTokenResponse(user, 200, res);
+  setAccessTokenCookie(user, res);
+  setRefreshTokenCookie(user, res);
+  res.status(200).json({
+    success: true,
+    data: {
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role
+    }
+  });
 });
 
 // @desc    Get current logged in user
@@ -163,36 +185,52 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   user.resetPasswordExpires = undefined;
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  setAccessTokenCookie(user, res);
+  setRefreshTokenCookie(user, res);
+  res.status(200).json({
+    success: true,
+    data: {
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role
+    }
+  });
 });
 
-// Helper function to get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
-  const token = user.getSignedJwtToken();
-
-  // Fall back to 30 days if JWT_COOKIE_EXPIRE is missing or not a valid number,
-  // so a misconfigured .env can never produce an Invalid Date here.
-  const cookieExpireDays = parseInt(process.env.JWT_COOKIE_EXPIRE, 10) || 30;
+// Set access token cookie (short-lived)
+const setAccessTokenCookie = (user, res) => {
+  const accessToken = user.getSignedAccessToken();
 
   const options = {
-    expires: new Date(
-      Date.now() + cookieExpireDays * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true
+    expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE, 10) * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    sameSite: 'lax',
   };
 
   if (process.env.NODE_ENV === 'production') {
     options.secure = true;
   }
 
-  res
-    .status(statusCode)
-    .cookie('token', token, options)
-    .json({
-      success: true,
-      token
-    });
+  res.cookie('accessToken', accessToken, options);
+};
+
+// Set refresh token cookie (long-lived, HTTP-only)
+const setRefreshTokenCookie = (user, res) => {
+  const refreshToken = user.getSignedRefreshToken();
+
+  const options = {
+    expires: new Date(Date.now() + parseInt(process.env.JWT_REFRESH_EXPIRE, 10) * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    sameSite: 'lax',
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    options.secure = true;
+  }
+
+  res.cookie('refreshToken', refreshToken, options);
 };
 
 module.exports = { register, login, getMe, forgotPassword, resetPassword, updateAvatar };

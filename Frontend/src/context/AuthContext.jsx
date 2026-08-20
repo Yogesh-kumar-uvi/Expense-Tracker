@@ -5,38 +5,27 @@ import api from '../api';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
     const fetchUser = async () => {
       try {
         const { data } = await api.get('/auth/me');
         setUser(data.data);
       } catch (e) {
-        localStorage.removeItem('token');
-        setToken(null);
+        // If me fails, clear user state
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
     fetchUser();
-  }, [token]);
+  }, []);
 
   const login = async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
-    const { data: meData } = await api.get('/auth/me', {
-      headers: { Authorization: `Bearer ${data.token}` }
-    });
+    await api.post('/auth/login', { email, password });
+    const { data: meData } = await api.get('/auth/me');
     setUser(meData.data);
   };
 
@@ -45,20 +34,21 @@ export const AuthProvider = ({ children }) => {
     await login(userData.email, userData.password);
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
+  const logout = async () => {
+    await api.post('/auth/logout');
     setUser(null);
     window.location.href = '/login';
   };
 
   const refreshUser = async () => {
+    // Not needed; access token is refreshed automatically via cookies.
+    // Keep as no-op or call me to update user info if desired.
     const { data } = await api.get('/auth/me');
     setUser(data.data);
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loading, login, register, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

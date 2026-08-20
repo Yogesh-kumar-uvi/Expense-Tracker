@@ -2,29 +2,22 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1'
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1',
+  withCredentials: true
 });
 
-// Attach JWT if present
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// Do NOT read JWT from localStorage.
+// Authentication is handled through HTTP-only cookies.
 
-// Optional: redirect to login on 401
+// Handle unauthorized requests
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
       window.location.href = '/login';
     }
-    return Promise.reject(err);
+
+    return Promise.reject(error);
   }
 );
 

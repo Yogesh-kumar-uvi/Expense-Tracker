@@ -60,10 +60,17 @@ userSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Sign JWT and return
-userSchema.methods.getSignedJwtToken = function() {
+// Sign access token (short-lived)
+userSchema.methods.getSignedAccessToken = function() {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
+    expiresIn: process.env.JWT_EXPIRE // 15m
+  });
+};
+
+// Sign refresh token (long-lived)
+userSchema.methods.getSignedRefreshToken = function() {
+  return jwt.sign({ id: this._id }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE // 7d
   });
 };
 

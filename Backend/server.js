@@ -80,7 +80,7 @@ const startServer = async () => {
 
     // Centralized error handler must be registered after all routes
     app.use(errorHandler);
-
+    
     const PORT = process.env.PORT || 5001;
 
     app.listen(PORT, () => {

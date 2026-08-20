@@ -5,31 +5,56 @@ const ErrorResponse = require('../utils/errorResponse');
 
 // Protect routes
 exports.protect = asyncHandler(async (req, res, next) => {
-  const token = req.cookies.accessToken;
+  let token;
+
+  // Primary authentication method: HTTP-only accessToken cookie
+  if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
+
+  // Backward compatibility: also allow Authorization header
+  if (
+    !token &&
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
 
   // Make sure token exists
   if (!token) {
     return next(
-      new ErrorResponse('Not authorized to access this route', 401)
+      new ErrorResponse(
+        'Not authorized to access this route',
+        401
+      )
     );
   }
 
   try {
-    // Verify access token using the access-token secret
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
 
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {
       return next(
-        new ErrorResponse('Not authorized to access this route', 401)
+        new ErrorResponse(
+          'Not authorized to access this route',
+          401
+        )
       );
     }
 
     next();
   } catch (err) {
     return next(
-      new ErrorResponse('Not authorized to access this route', 401)
+      new ErrorResponse(
+        'Not authorized to access this route',
+        401
+      )
     );
   }
 });
